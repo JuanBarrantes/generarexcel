@@ -27,6 +27,7 @@ public class Consulta {
         try {
             PreparedStatement consulta = conexion.prepareStatement("select * from pregunta where IDPROCEDIMIENTO = ?");
             consulta.setInt(1, procedimento);
+            System.out.println(consulta);
             ResultSet rs = consulta.executeQuery();
             while (rs.next()) {
                 Pregunta obj = new Pregunta();
@@ -41,15 +42,26 @@ public class Consulta {
     }
 
     //para los alumnos
-    public static ArrayList<Atendido> traerAlumnos(Connection conexion, int procedimento, int ciclo) throws SQLException {
+    public static ArrayList<Atendido> traerAlumnos(Connection conexion, int procedimento, int ciclo, int escuela) throws SQLException {
         ArrayList<Atendido> lista = new ArrayList<>();
         try {
+            String v = "";
+            if (escuela == 0) {
+                v = "atendido a on a.idatendido = b.IDATENDIDO inner join escuela e on a.IDESCUELA = e.IDESCUELA where IDPROCEDIMIENTO = ? AND a.IDCICLO_ACADEMICO_INGRESO = ? order ";
+            } else {
+                v = "atendido a on a.idatendido = b.IDATENDIDO inner join escuela e on a.IDESCUELA = e.IDESCUELA where IDPROCEDIMIENTO = ? "
+                        + "AND a.IDCICLO_ACADEMICO_INGRESO = ? AND e.IDESCUELA = ? order ";
+            }
             PreparedStatement consulta = conexion.prepareStatement("select a.idatendido, a.APELLIDO_PAT, "
                     + "a.APELLIDO_MAT, a.NOMBRE, a.idescuela, e.nombre as ESCUELA from evaluacion_atendido b inner join "
-                    + "atendido a on a.idatendido = b.IDATENDIDO inner join escuela e on a.IDESCUELA = e.IDESCUELA where IDPROCEDIMIENTO = ? AND a.IDCICLO_ACADEMICO_INGRESO = ? order "
+                    + v
                     + "by a.APELLIDO_PAT, a.APELLIDO_MAT, a.NOMBRE asc ");
             consulta.setInt(1, procedimento);
             consulta.setInt(2, ciclo);
+            if (escuela != 0) {
+                consulta.setInt(3, escuela);
+            }
+            System.out.println(consulta);
             ResultSet rs = consulta.executeQuery();
             while (rs.next()) {
                 Atendido obj = new Atendido();
@@ -73,12 +85,14 @@ public class Consulta {
             PreparedStatement consulta = conexion.prepareStatement("select IDEVALUACION_ATENDIDO from evaluacion_atendido where IDATENDIDO=? and IDPROCEDIMIENTO = ?");
             consulta.setInt(1, idEvaluacion);
             consulta.setInt(2, procedimento);
+            //System.out.println(consulta);
             ResultSet rs = consulta.executeQuery();
             int id = 0;
             while (rs.next()) {
                 id = rs.getInt("IDEVALUACION_ATENDIDO");
                 PreparedStatement consulta2 = conexion.prepareStatement("select * from respuesta_evaluacion where IDEVALUACION_ATENDIDO = ?");
                 consulta2.setInt(1, id);
+                System.out.println(consulta2);
                 ResultSet rs2 = consulta2.executeQuery();
                 while (rs2.next()) {
                     RespuestaEvalucaion obj = new RespuestaEvalucaion();

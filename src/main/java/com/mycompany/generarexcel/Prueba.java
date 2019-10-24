@@ -30,12 +30,50 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Prueba {
 
     private static final Logger LOGGER = Logger.getLogger("newexcel.ExcelOOXML");
-    private static final int procedimiento = 8;
-    private static final int ciclo = 11;
+    private static final int procedimiento = 10;
+    private static final int ciclo = 12;
+    private static final int escuela = 11;
 
+//    public static void main(String[] args) {
+//        for (int i = 5; i < 12; i++) {
+//            proceso(i,escuela);
+//        }
+//        
+//    }
+        
     public static void main(String[] args) {
+        proceso(10, 0);
+    }
+    
+    
+    private static void proceso (int procedimiento, int escuela){
+        
+        File archivo = null;
+        
+        switch(procedimiento){
+            case 5:
+                archivo = new File("C:/Users/JhanxD/Desktop/Baron Ice/INVENTARIO EMOCIONAL BARON ICE.xlsx");
+                break;
+            case 6:
+                archivo = new File("C:/Users/JhanxD/Desktop/Enfermeria/ESCALA DE RECURSOS APGAR FAMILIAR Y SOPORTE DE AMIGOS.xlsx");
+                break;
+            case 7:
+                archivo = new File("C:/Users/JhanxD/Desktop/Enfermeria/INVENTARIO DE HABILIDADES Y ESTRATEGIAS DE APRENDIZAJE.xlsx");
+                break;
+            case 8 :
+                archivo = new File("C:/Users/JhanxD/Desktop/Enfermeria/CUESTIONARIO DE AUTO REPORTAJE PARA ADULTOS (SQR).xlsx");
+                break;
+            case 9:
+                archivo = new File("C:/Users/JhanxD/Desktop/Enfermeria/ESCALA DE AUTOPERCEPCIÓN VOCACIONAL.xlsx");
+                break;
+            case 10:
+                archivo = new File("C:/Users/JhanxD/Desktop/Baron Ice/ESCALA DE PROCRASTINACIÓN  ACADÉMICA.xlsx");
+                break;
+            case 11:
+                archivo = new File("C:/Users/JhanxD/Desktop/Enfermeria/ESCALA DE SALUD GENERAL (GHQ).xlsx");
+                break;
+        }
 
-        File archivo = new File("C:/Users/JhanxD/Desktop/CUESTIONARIO DE AUTO REPORTAJE PARA ADULTOS (SQR).xlsx");
         // Creamos el libro de trabajo de Excel formato OOXML
         Workbook workbook = new XSSFWorkbook();
         // La hoja donde pondremos los datos
@@ -61,7 +99,7 @@ public class Prueba {
             }
 
             ArrayList<Atendido> alumnosbd;
-            alumnosbd = Consulta.traerAlumnos(Conexion.obtener(),procedimiento, ciclo);
+            alumnosbd = Consulta.traerAlumnos(Conexion.obtener(),procedimiento, ciclo, escuela);
             for (int i = 0; i < alumnosbd.size(); i++) {
                 String[] contenido = new String[137];
                 ArrayList<RespuestaEvalucaion> respuestasbd;
